@@ -27,17 +27,18 @@ mongoose.connect(process.env.MONGO_URL, {
 
 //Create New User
 app.post("/register", async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, balance, password } = req.body;
   try {
     const UserDoc = await User.create({
       firstName,
       lastName,
       email,
+      balance,
       password: bcrypt.hashSync(password, bcryptSalt),
     });
     res.json(UserDoc);
   } catch (error) {
-    res.status(422).json(error);
+    res.status(422).json(error.mongoose);
   }
 });
 
@@ -71,8 +72,8 @@ app.get("/dashboard", (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { firstName, lastName, email, _id } = await User.findById(userData.id);
-      res.json({ firstName, lastName, email, _id });
+      const { firstName, lastName, email, balance, _id } = await User.findById(userData.id);
+      res.json({ firstName, lastName, email, balance, _id });
     });
   } else {
     res.json(null);
