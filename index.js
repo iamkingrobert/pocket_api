@@ -9,7 +9,7 @@ require("dotenv").config();
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = "eyJhb7GciOiJIU6asdnsslan9sbsm";
+const jwtSecret = process.env.JWT_SECRET;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,7 +23,6 @@ app.use(
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
 });
-
 
 //Create New User
 app.post("/register", async (req, res) => {
@@ -72,7 +71,9 @@ app.get("/dashboard", (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { firstName, lastName, email, balance, _id } = await User.findById(userData.id);
+      const { firstName, lastName, email, balance, _id } = await User.findById(
+        userData.id
+      );
       res.json({ firstName, lastName, email, balance, _id });
     });
   } else {
