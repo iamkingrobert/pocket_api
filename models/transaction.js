@@ -6,7 +6,7 @@ const transactionSchema = new Schema({
   transactionId: { type: String, required: true, unique: true },
   email: { type: String, required: true },
   timestamps: { type: Date, default: Date.now },
-  status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+  status: { type: String, enum: ['pending', 'successful', 'failed'], default: 'pending' },
   transactionType: { type: String, enum: ['topup', 'transfer'], required: true }
 });
 
